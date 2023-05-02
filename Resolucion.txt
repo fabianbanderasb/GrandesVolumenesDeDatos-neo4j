@@ -1,0 +1,160 @@
+Nodos “Alumno”
+CREATE
+(A: Alumno { nombre: "David", apellido: "Delli", dni: "1234123412" } ),
+(B: Alumno { nombre: "Jose", apellido: "Lopez", dni: "1234123413" } ),
+(D: Alumno { nombre: "Manuel", apellido: "Mendez", dni: "1234123414" } ),
+(E: Alumno { nombre: "Alejandro", apellido: "Fray", dni: "1234123415" } ),
+(F: Alumno { nombre: "Andres", apellido: "Martinez", dni: "1234123416" } );
+
+Nodos “Materia”
+CREATE
+ (M1: Materia { nombre: "Bases de Datos I", electiva: true } ),
+ (M2: Materia { nombre: "Programacion I", electiva: false } ),
+ (M3: Materia { nombre: "Fisica II", electiva: true } ),
+ (M4: Materia { nombre: "Taller de TP Final", electiva: false } ),
+ (M5: Materia { nombre: "Protocolos de Red", electiva: false } ),
+ (M6: Materia { nombre: "Inteligencia Artificial", electiva: true } ),
+ (M7: Materia { nombre: "Testing de Internet de las Cosas", electiva: true } ),
+ (M8: Materia { nombre: "Gestion de Proyectos", electiva: true } );
+
+Nodos “Docente”
+CREATE
+ (D1: Docente { nombre: "Yoel", apellido: "Lopez", dni: "12341212318" } ),
+ (D2: Docente { nombre: "Carlos", apellido: "Pantelides", dni: "12341212319" } ),
+ (D3: Docente { nombre: "Fernando", apellido: "Lichstein", dni: "12341212391" } ),
+ (D4: Docente { nombre: "Leopoldo", apellido: "Zimperz", dni: "12341212317" } ),
+ (D5: Docente { nombre: "Alejandro", apellido: "Fray", dni: "1234123415" } ),
+ (D6: Docente { nombre: "Pedro", apellido: "Rosito", dni: "12341234112" } ),
+ (D7: Docente { nombre: "Matias", apellido: "Bustos", dni: "12341212362" } ),
+ (D8: Docente { nombre: "Patricio", apellido: "Bos", dni: "12342342362" } );
+
+Relación “CONOCE_A”
+MATCH (Delli: Alumno { dni: "1234123412"}), (Lopez: Alumno { dni: "1234123413"} )
+CREATE (Delli)-[:CONOCE_A ]->(Lopez);
+MATCH (Lopez: Alumno { dni: "1234123413"}), (Delli: Alumno { dni: "1234123412"} )
+CREATE (Lopez)-[:CONOCE_A ]->(Delli);
+MATCH (Lopez: Alumno { dni: "1234123413"}), (Mendez: Alumno { dni: "1234123414"} )
+CREATE (Lopez)-[:CONOCE_A ]->(Mendez);
+MATCH (Mendez: Alumno { dni: "1234123414"}), (Lopez: Alumno { dni: "1234123413"} )
+CREATE (Mendez)-[:CONOCE_A ]->(Lopez);
+MATCH (Mendez: Alumno { dni: "1234123414"}), (Fray: Alumno { dni: "1234123415"} )
+CREATE (Mendez)-[:CONOCE_A ]→(Fray);
+MATCH (Fray: Alumno { dni: "1234123415"}), (Mendez: Alumno { dni: "1234123414"} )
+CREATE (Fray)-[:CONOCE_A ]→(Mendez);
+
+Relación “ES”
+MATCH (Fray: Alumno { dni: "1234123415"}), (Gia2: Docente { dni: "1234123415"} )
+CREATE (Fray)-[:ES ]->(Gia2);
+MATCH (Gia2: Docente { dni: "1234123415"}), (Fray: Alumno { dni: "1234123415"} )
+CREATE (Gia2)-[:ES ]→(Fray);
+
+Relación “DICTO”
+MATCH (Yoel: Docente { dni: "12341212318"}), (BDI: Materia {nombre: "Bases de Datos I" })
+CREATE (Yoel)-[:DICTO {comision: "7Co2022", cuatrimestre: 2} ]->(BDI);
+MATCH (Yoel: Docente { dni: "12341212318"}), (PDR: Materia {nombre: "Protocolos de Red" })
+CREATE (Yoel)-[:DICTO {comision: "7Co2022", cuatrimestre: 1} ]->(PDR);
+MATCH (Fray: Docente { dni: "1234123415"}), (FIS: Materia {nombre: "Fisica II" })
+CREATE (Fray)-[:DICTO {comision: "8Co2022", cuatrimestre: 2} ]->(FIS);
+MATCH (Fernando: Docente { dni: "12341212391"}), (TTF: Materia {nombre: "Taller de TP Final" })
+CREATE (Fernando)-[:DICTO {comision: "7Co2022", cuatrimestre: 1} ]->(TTF);
+MATCH (Leopoldo: Docente { dni: "12341212317"}), (PROG: Materia {nombre: "Programacion I" })
+CREATE (Leopoldo)-[:DICTO {comision: "6Co2022", cuatrimestre: 1} ]->(PROG);
+MATCH (Pedro: Docente { dni: "12341234112"}), (IA: Materia {nombre: "Inteligencia Artificial" })
+CREATE (Pedro)-[:DICTO {comision: "6Co2022", cuatrimestre: 1} ]->(IA);
+MATCH (Matias: Docente { dni: "12341212362"}), (IA: Materia {nombre: "Inteligencia Artificial" })
+CREATE (Matias)-[:DICTO {comision: "8Co2023", cuatrimestre: 1} ]->(IA);
+MATCH (Carlos: Docente { dni: "12341212319"}), (IA: Materia {nombre: "Testing de Internet de las Cosas" })
+CREATE (Carlos)-[:DICTO {comision: "6Co2022", cuatrimestre: 1} ]->(IA);
+MATCH (Patricio: Docente { dni: "12342342362"}), (IA: Materia {nombre: "Gestion de Proyectos" })
+CREATE (Patricio)-[:DICTO {comision: "6Co2022", cuatrimestre: 1} ]→(IA);
+
+Relación “CURSO”
+MATCH (Alm: Alumno { dni: "1234123412"}), (Mat: Materia { nombre: "Bases de Datos I"} )
+CREATE (Alm)-[:CURSO {comision: "7Co2022", cuatrimestre: 2, grupo: 1, calificacion: 7} ]->(Mat);
+MATCH (Alm: Alumno { dni: "1234123412"}), (Mat: Materia { nombre: "Programacion I"} )
+CREATE (Alm)-[:CURSO {comision: "6Co2022", cuatrimestre: 1, grupo: 2, calificacion: 8} ]->(Mat);
+MATCH (Alm: Alumno { dni: "1234123413"}), (Mat: Materia { nombre: "Programacion I"} )
+CREATE (Alm)-[:CURSO {comision: "6Co2022", cuatrimestre: 1, grupo: 2, calificacion: 8} ]->(Mat);
+MATCH (Alm: Alumno { dni: "1234123413"}), (Mat: Materia { nombre: "Bases de Datos I"} )
+CREATE (Alm)-[:CURSO {comision: "7Co2022", cuatrimestre: 2, grupo: 3, calificacion: 7} ]->(Mat);
+MATCH (Alm: Alumno { dni: "1234123414"}), (Mat: Materia { nombre: "Fisica II"} )
+CREATE (Alm)-[:CURSO {comision: "8Co2022", cuatrimestre: 2, grupo: 1, calificacion: 6} ]->(Mat);
+MATCH (Alm: Alumno { dni: "1234123415"}), (Mat: Materia { nombre: "Taller de TP Final"} )
+CREATE (Alm)-[:CURSO {comision: "7Co2022", cuatrimestre: 1, grupo: 1, calificacion: 10} ]->(Mat);
+MATCH (Alm: Alumno { dni: "1234123416"}), (Mat: Materia { nombre: "Protocolos de Red"} )
+CREATE (Alm)-[:CURSO {comision: "7Co2022", cuatrimestre: 1, grupo: 4, calificacion: 7} ]->(Mat);
+MATCH (Alm: Alumno { dni: "1234123416"}), (Mat: Materia { nombre: "Programacion I"} )
+CREATE (Alm)-[:CURSO {comision: "6Co2022", cuatrimestre: 1, grupo: 4, calificacion: 10} ]->(Mat);
+MATCH (Alm: Alumno { dni: "1234123412"}), (Mat: Materia { nombre: "Protocolos de Red"} )
+CREATE (Alm)-[:CURSO {comision: "7Co2022", cuatrimestre: 1, grupo: 2, calificacion: 8} ]->(Mat);
+MATCH (Lopez: Alumno { dni: "1234123413"}), (Mat: Materia { nombre: "Inteligencia Artificial"} )
+CREATE (Lopez)-[:CURSO {comision: "6Co2022", cuatrimestre: 1, grupo: 2, calificacion: 8} ]->(Mat);
+MATCH (Alm: Alumno { dni: "1234123416"}), (Mat: Materia { nombre: "Testing de Internet de las Cosas"} )
+CREATE (Alm)-[:CURSO {comision: "6Co2022", cuatrimestre: 1, grupo: 4, calificacion: 10} ]->(Mat);
+
+Si se desea obtener el gráfico de dominio en Neo4j Aura, se usa el comando: call db.schema.visualization();
+Para obtener el grafo completo en Neo4j Aura, se debe utilizar el siguiente comando:
+MATCH (n) MATCH ()-[r]->() RETURN n, r
+
+A continuación se describen las consultas realizadas:
+    1. Listado de alumnos que cursaron materias juntos, pero en esta materia son de distintos grupos.
+MATCH (a1: Alumno)-[c1:CURSO]->(m: Materia)<-[c2:CURSO]-(a2: Alumno) WHERE m.nombre<>'Bases de Datos I' and c1.comision = c2.comision and c1.cuatrimestre = c2.cuatrimestre and c1.grupo = c2.grupo with a1, a2
+MATCH (a1)-[c1:CURSO]->(m1: Materia)<-[c2:CURSO]-(a2) WHERE m1.nombre='Bases de Datos I' and c1.comision = c2.comision and c1.cuatrimestre = c2.cuatrimestre and c1.grupo <> c2.grupo return a1,a2
+
+    2. Listado de docentes que dictaron más de una materia.
+MATCH (D:Docente ) -[:DICTO]->(M1: Materia), (D)-[:DICTO]->(M2: Materia) WHERE M1 <>M2 RETURN DISTINCT D.nombre, D.apellido
+
+    3. Tu propio promedio de calificaciones.
+MATCH (A: Alumno ) -[curso:CURSO]->(M: Materia) WHERE A.apellido = 'Lopez' return AVG(curso.calificacion)
+
+    4. Listado para recomendación de alumnos que cursaron en el mismo curso y cuatrimestre pero no se conocen entre sí.
+MATCH (a1:Alumno)-[c1:CURSO]->(:Materia)<-[c2:CURSO]-(a2:Alumno) WHERE a1 <> a2 AND c1.cuatrimestre = c2.cuatrimestre AND c1.comision = c2.comision  AND NOT (a1)-[:CONOCE_A]-(a2) return distinct a1,a2
+
+    5. Listado de los conocidos de tus conocidos, hasta longitud 2, e indefinida.
+    • Hasta longitud 2:
+MATCH (a1: Alumno)-[:CONOCE_A*..2]->(a2: Alumno) WHERE  a1.apellido = 'Delli' and a1 <> a2 return distinct(a2.apellido)
+
+    • Longitud indefinida:
+MATCH (a1: Alumno)-[:CONOCE_A*]->(a2: Alumno) WHERE  a1.apellido = 'Delli' and a1 <> a2 return distinct(a2.apellido)
+
+    6. Apellido y nombre de alumnos que también son docentes (ver pedido adicional para esta consulta).
+MATCH (a1: Alumno)-[:ES]->(d1: Docente) return a1.apellido, a1.nombre
+
+La variante que se ha planteado para este punto es incorporar el nodo “Persona”. De esta manera, los atributos de los nodos “Alumno” y “Docente” pasarán a “Persona” y se creará una relación “ES” entre “Persona” y “Docente” o “Alumno” en aquellos casos que corresponda. A su vez se elimina la relación “ES” entre “Docente” y “Alumno”.
+MATCH (a:Alumno)
+MERGE (p:Persona {dni: a.dni})
+ON CREATE SET p.nombre = a.nombre, p.apellido = a.apellido
+ON MATCH SET p.nombre = a.nombre, p.apellido = a.apellido
+CREATE (p)-[:ES]->(a);
+MATCH (d:Docente)
+MERGE (p:Persona {dni: d.dni})
+ON CREATE SET p.nombre = d.nombre, p.apellido = d.apellido
+ON MATCH SET p.nombre = d.nombre, p.apellido = d.apellido
+CREATE (p)-[:ES]->(d);
+MATCH (a:Alumno)
+SET a.nombre = null, a.apellido = null, a.dni = null;
+MATCH (d:Docente)
+SET d.nombre = null, d.apellido = null, d.dni = null;
+MATCH (:Alumno)-[r:ES]->(:Docente)
+DELETE r;
+MATCH (:Docente)-[r:ES]->(:Alumno)
+DELETE r;
+
+Luego, para poder obtener apellido y nombre de aquellos alumnos que también son docentes podemos hacer la siguiente consulta
+MATCH (p:Persona)-[:ES]->(a:Alumno), (p)-[:ES]->(d:Docente) RETURN p.nombre, p.apellido
+
+    7. Dado un alumno en particular, se quiere obtener el listado de materias electivas que no haya cursado, en base al criterio de haber sido cursadas por otros alumnos que cursaron por lo menos una en común con él.
+    • Sin tener en cuenta que hayan cursado el mismo cuatrimestre/comisión.
+MATCH (a1: Alumno)-[:CURSO]->(m1: Materia)<-[:CURSO]-(a2: Alumno)-[:CURSO]->(m2: Materia) WHERE a1.apellido = 'Delli' and not (a1)-[:CURSO]->(m2) and m2.electiva = TRUE with m2,count(distinct a2) as alumnos WHERE alumnos >= 1 return distinct(m2.nombre)Teniendo en cuenta el mismo cuatrimestre/comisión
+MATCH (a1: Alumno)-[c1:CURSO]->(m1: Materia)<-[c2:CURSO]-(a2: Alumno)-[:CURSO]->(m2: Materia) WHERE a1.apellido = 'Delli' and not (a1)-[:CURSO]->(m2) and c1.comision = c2.comision and c1.cuatrimestre = c2.cuatrimestre and m2.electiva = TRUE with m2,count(distinct a2) as alumnos WHERE alumnos >= 1 return distinct(m2.nombre)
+
+    8. Hacer una variante del ítem anterior, recomendando sólo si el otro alumno es un contacto (directo o indirecto).
+MATCH (a1)-[:CONOCE_A*..]->(a2) WHERE  a1.apellido = 'Delli' and a1 <> a2 with distinct(a2) as a2
+MATCH (a1: Alumno)-[:CURSO]->(m1: Materia)<-[:CURSO]-(a2)-[:CURSO]->(m2: Materia) WHERE a1.apellido = 'Delli' and not (a1)-[:CURSO]->(m2) and m2.electiva = TRUE with m2,count(distinct a2) as alumnos WHERE alumnos >= 1 return distinct(m2.nombre)
+
+    9. Consulta adicional, decidida por el alumno.
+Se plantearon dos consultas adicionales:
+    • Materia que haya sido dictada por más de un docente
+MATCH (m1:Materia )<-[:DICTO]-(D: Docente) with m1,count(distinct D) as docentes where docentes > 1 return m1.nombre,docentes
+    • Alumno que tenga el mejor promedio en las materias
+MATCH (A: Alumno )-[curso:CURSO]->(M: Materia)  with A, avg(curso.calificacion) as promedio order by promedio DESC limit 1 return A.nombre, A.apellido, promedio
